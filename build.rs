@@ -1,6 +1,6 @@
 use bindgen;
-use std::fs;
 use std::env;
+use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -27,6 +27,8 @@ fn main() {
         .current_dir("minisketch/src")
         .status()
         .expect("failed to make!");
+
+    println!("cargo:rustc-flags=-L minisketch/src -l minisketch");
 
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
