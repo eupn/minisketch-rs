@@ -128,8 +128,8 @@ mod tests {
             let sersize = minisketch_serialized_size(sketch_a);
             assert_eq!(sersize, 12 * 4 / 8);
 
-            let mut buf_a = Vec::with_capacity(sersize);
-            minisketch_serialize(sketch_a, buf_a.as_mut_ptr());
+            let mut buf_a = vec![0u8; sersize];
+            minisketch_serialize(sketch_a, buf_a.as_mut_slice().as_mut_ptr());
             minisketch_destroy(sketch_a);
 
             let sketch_b = minisketch_create(12, 0, 4);
@@ -169,8 +169,8 @@ mod tests {
         let sersize = sketch_a.serialized_size();
         assert_eq!(sersize, 12 * 4 / 8);
 
-        let mut buf_a = Vec::with_capacity(sersize);
-        sketch_a.serialize(&mut buf_a).unwrap();
+        let mut buf_a = vec![0u8; sersize];
+        sketch_a.serialize(buf_a.as_mut_slice()).unwrap();
 
         let mut sketch_b = Minisketch::try_new(12, 0, 4).unwrap();
         for i in 3_002..3_012 {
