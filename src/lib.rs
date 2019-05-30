@@ -2,8 +2,8 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use std::io::{Error, Read, Write};
-use std::ops::{BitXor, BitXorAssign};
+use std::ops::BitXorAssign;
+
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 pub struct Minisketch {
@@ -61,25 +61,20 @@ impl Minisketch {
             Ok(result as usize)
         }
     }
-}
 
-impl Read for Minisketch {
-    fn read(&mut self, buf: &mut [u8]) -> Result<usize, Error> {
-        let size = self.serialized_size();
-        unsafe { minisketch_serialize(self.inner, buf.as_mut_ptr()) }
-
-        Ok(size)
-    }
-}
-
-impl Write for Minisketch {
-    fn write(&mut self, buf: &[u8]) -> Result<usize, Error> {
+    pub fn deserialize(&mut self, buf: &[u8]) -> Result<(), ()> {
         unsafe { minisketch_deserialize(self.inner, buf.as_ptr()) }
-
-        Ok(buf.len())
+        Ok(())
     }
 
-    fn flush(&mut self) -> Result<(), Error> {
+    pub fn serialize(&mut self, buf: &mut [u8]) -> Result<(), ()> {
+        let size = self.serialized_size();
+
+        if size < buf.len() {
+            return Err(());
+        }
+
+        unsafe { minisketch_serialize(self.inner, buf.as_mut_ptr()) }
         Ok(())
     }
 }
@@ -175,7 +170,7 @@ mod tests {
         assert_eq!(sersize, 12 * 4 / 8);
 
         let mut buf_a = Vec::with_capacity(sersize);
-        sketch_a.read(&mut buf_a).unwrap();
+        sketch_a.serialize(&mut buf_a).unwrap();
 
         let mut sketch_b = Minisketch::try_new(12, 0, 4).unwrap();
         for i in 3_002..3_012 {
@@ -187,7 +182,7 @@ mod tests {
             let mut sketch_b = sketch_b.clone();
             // Alice's sketch
             let mut sketch_a = Minisketch::try_new(12, 0, 4).unwrap();
-            sketch_a.write(&buf_a).unwrap(); // Load Alice's sketch
+            sketch_a.deserialize(&buf_a).unwrap(); // Load Alice's sketch
 
             // Merge the elements from sketch_a into sketch_b. The result is a sketch_b
             // which contains all elements that occurred in Alice's or Bob's sets, but not
@@ -207,7 +202,7 @@ mod tests {
 
             // Alice's sketch
             let mut sketch_a = Minisketch::try_new(12, 0, 4).unwrap();
-            sketch_a.write(&buf_a).unwrap(); // Load Alice's sketch
+            sketch_a.deserialize(&buf_a).unwrap(); // Load Alice's sketch
 
             // Merge the elements from sketch_a into sketch_b. The result is a sketch_b
             // which contains all elements that occurred in Alice's or Bob's sets, but not
