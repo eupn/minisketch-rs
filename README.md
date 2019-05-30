@@ -3,13 +3,22 @@
 `minisketch-rs` is a wrapper around [minisketch](https://github.com/sipa/minisketch),
 a C library by [Peter Wuille](https://github.com/sipa) for efficient set reconciliation.
 
+> minisketch is proposed as part of an [Erlay](https://arxiv.org/abs/1905.10518) technique for bandwidth-efficient TX propagation in Bitcoin.
+
 This library exposes type-safe Rust bindings for all `minisketch` functions by providing `Minisketch` structure.
 
 #### Example
 
-Example of simple set reconciliation between Alice and Bob:
+Cargo.toml:
+```toml
+[dependencies]
+minisketch-rs = "0.1"
+```
 
+Example of simple set reconciliation between Alice and Bob:
 ```rust
+use minisketch_rs::Minisketch;
+
 // Alice's side
 let mut sketch_a = Minisketch::try_new(12, 0, 4).unwrap();
 
@@ -67,4 +76,37 @@ println!("Message: {}, {:?}", buf_a.len(), buf_a);
     assert_eq!(differences[2], 3_010);
     assert_eq!(differences[3], 3_011);
 }
+```
+
+Code snippet above will print:
+
+```
+Alice's set:
+3000
+3001
+3002
+3003
+3004
+3005
+3006
+3007
+3008
+3009
+Message: 6, [1, 224, 210, 249, 116, 105]
+Bob's set:
+3002
+3003
+3004
+3005
+3006
+3007
+3008
+3009
+3010
+3011
+Differences between Alice and Bob: 4
+Difference #1: 3000
+Difference #2: 3001
+Difference #3: 3010
+Difference #4: 3011
 ```
