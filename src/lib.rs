@@ -33,6 +33,8 @@ impl Minisketch {
         unsafe { minisketch_capacity(self.inner) }
     }
 
+    pub fn implementation(&self) -> u32 { unsafe { minisketch_implementation(self.inner) } }
+
     pub fn serialized_size(&self) -> usize {
         unsafe { minisketch_serialized_size(self.inner) }
     }
@@ -40,6 +42,8 @@ impl Minisketch {
     pub fn add(&mut self, element: u64) {
         unsafe { minisketch_add_uint64(self.inner, element) }
     }
+
+    pub fn set_seed(&mut self, seed: u64) { unsafe { minisketch_set_seed(self.inner, seed) } }
 
     pub fn merge(&mut self, other: &Self) -> Result<usize, ()> {
         let capacity = unsafe { minisketch_merge(self.inner, other.inner) };
@@ -162,6 +166,11 @@ mod tests {
     // Implement a README's example with Rust API as a sanity check
     pub fn sanity_check_rust_types() {
         let mut sketch_a = Minisketch::try_new(12, 0, 4).unwrap();
+
+        assert_eq!(sketch_a.bits(), 12);
+        assert_eq!(sketch_a.implementation(), 0);
+        assert_eq!(sketch_a.capacity(), 4);
+
         for i in 3_000..3_010 {
             sketch_a.add(i);
         }
