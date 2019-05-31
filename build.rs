@@ -2,7 +2,8 @@ use bindgen;
 use std::env;
 use std::fs;
 use std::path::PathBuf;
-use std::process::Command;
+use cc;
+use std::fs::read_dir;
 
 fn fail_on_empty_directory(name: &str) {
     if fs::read_dir(name).unwrap().count() == 0 {
@@ -21,18 +22,42 @@ fn main() {
 
     fail_on_empty_directory("minisketch");
 
-    // Build with make
-    // TODO: use `cc` crate to build manually
-    Command::new("make")
-        .current_dir("minisketch/src")
-        .status()
-        .expect("failed to make!");
+    build_lib();
+    generate_bindings();
 
     println!("cargo:rustc-flags=-L minisketch/src -l minisketch");
+}
 
-    // The bindgen::Builder is the main entry point
-    // to bindgen, and lets you build up options for
-    // the resulting bindings.
+fn build_lib() {
+    // Collect minisketch.cpp and .cpp files from fields/ directory
+    let fields = read_dir("minisketch/src/fields").unwrap();
+    let src_files = read_dir("minisketch/src")
+        .unwrap()
+        .chain(fields)
+        .map(|f| f.unwrap())
+        .filter(|f| !f.file_name().to_string_lossy().contains("test-exhaust.cpp"))
+        .filter(|f| !f.file_name().to_string_lossy().contains("bench.cpp"))
+        .filter(|f| f.file_name().to_string_lossy().ends_with(".cpp"))
+        .map(|f| f.path())
+        .collect::<Vec<_>>();
+
+    // Build minisketch library
+    cc::Build::new()
+        .files(src_files)
+        //.include("minisketch/src")
+        .cpp(true)
+        .opt_level(2)
+        .debug(false)
+        .warnings(false)
+        .extra_warnings(false)
+        .flag("-mpclmul")
+        .flag("-g0")
+        .flag("-std=c++11")
+        .define("HAVE_CLZ", None)
+        .compile("libminisketch.a")
+}
+
+fn generate_bindings() {
     let bindings = bindgen::Builder::default()
         // The input header we would like to generate
         // bindings for.
