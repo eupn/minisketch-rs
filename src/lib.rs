@@ -272,7 +272,7 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn serialize(&mut self, buf: &mut [u8]) -> Result<(), ()> {
+    pub fn serialize(&self, buf: &mut [u8]) -> Result<(), ()> {
         let size = self.serialized_size();
 
         if size < buf.len() {
