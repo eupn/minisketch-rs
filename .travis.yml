@@ -15,10 +15,19 @@ before_cache:
 branches:
   only:
     - master
-addons:
-  apt:
-    packages:
-      - c++
-      - clang-3.8
-      - libc++-dev
-      - libc++abi-dev
+
+atrix:
+  include:
+    # works on Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env:
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+
+before_install:
+  - eval "${MATRIX_EVAL}"
