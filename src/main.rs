@@ -31,7 +31,7 @@ pub fn main() {
 
         // Alice's sketch
         let mut sketch_a = Minisketch::try_new(12, 0, 4).unwrap();
-        sketch_a.deserialize(&buf_a).unwrap(); // Load Alice's sketch
+        sketch_a.deserialize(&buf_a); // Load Alice's sketch
 
         // Merge the elements from sketch_a into sketch_b. The result is a sketch_b
         // which contains all elements that occurred in Alice's or Bob's sets, but not

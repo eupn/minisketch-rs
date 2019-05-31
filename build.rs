@@ -59,6 +59,7 @@ fn build_lib() {
 
 fn generate_bindings() {
     let bindings = bindgen::Builder::default()
+        .generate_comments(false)
         // The input header we would like to generate
         // bindings for.
         .header("minisketch/include/minisketch.h")

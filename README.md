@@ -1,7 +1,7 @@
 ### minisketch-rs
 
 `minisketch-rs` is a wrapper around [minisketch](https://github.com/sipa/minisketch),
-a C library by [Peter Wuille](https://github.com/sipa) for efficient set reconciliation.
+a C library by [Pieter Wuille](https://github.com/sipa) for efficient set reconciliation.
 
 > minisketch is proposed as part of an [Erlay](https://arxiv.org/abs/1905.10518) technique for bandwidth-efficient TX propagation in Bitcoin.
 
@@ -49,7 +49,7 @@ println!("Message: {}, {:?}", buf_a.len(), buf_a);
 
     // Alice's sketch
     let mut sketch_a = Minisketch::try_new(12, 0, 4).unwrap();
-    sketch_a.deserialize(&buf_a).unwrap(); // Load Alice's sketch
+    sketch_a.deserialize(&buf_a); // Load Alice's sketch
 
     // Merge the elements from sketch_a into sketch_b. The result is a sketch_b
     // which contains all elements that occurred in Alice's or Bob's sets, but not
