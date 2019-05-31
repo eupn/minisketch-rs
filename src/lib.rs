@@ -137,6 +137,8 @@ impl Minisketch {
     /// of two sketches with the same element size and capacity by performing a bitwise XOR
     /// of the serializations.
     ///
+    /// You can also merge two sketches by doing xor-assignment (`^=`).
+    ///
     /// # Errors
     ///
     /// Returns `Err(())` to indicate that merging has failed
@@ -313,6 +315,32 @@ impl Clone for Minisketch {
 }
 
 /// Custom `^=` operator implementation on two sketches that performs merging.
+///
+/// # Example
+///
+/// ```rust
+/// # pub fn main() -> Result<(), ()> {
+/// use minisketch_rs::Minisketch;
+/// let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
+/// sketch_a.add(10);
+/// sketch_a.add(43);
+///
+/// let mut sketch_b = Minisketch::try_new(12, 0, 4)?;
+/// sketch_b.add(42);
+/// sketch_b.add(43);
+///
+/// // Merge two sketches with ^= operator
+/// sketch_a ^= sketch_b;
+///
+/// // Extract difference
+/// let mut differences = vec![0u64; 2];
+/// sketch_a.decode(&mut differences)?;
+///
+/// assert!((differences[0] == 42 || differences[0] == 10) && (differences[1] == 10 || differences[1] == 42));
+///
+/// # Ok(())
+/// # }
+/// ```
 impl BitXorAssign for Minisketch {
     fn bitxor_assign(&mut self, rhs: Minisketch) {
         let _ = self.merge(&rhs);
