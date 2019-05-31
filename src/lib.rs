@@ -126,8 +126,8 @@
 //! [Pieter Wuille]: https://github.com/sipa
 //! [Erlay]: https://arxiv.org/abs/1905.10518
 
+use std::fmt::{Debug, Error, Formatter};
 use std::ops::BitXorAssign;
-use std::fmt::{Debug, Formatter, Error};
 
 #[doc(hidden)]
 mod ffi {
@@ -167,7 +167,12 @@ impl Minisketch {
         let inner = unsafe { ffi::minisketch_create(bits, implementation, capacity) };
 
         if inner != std::ptr::null_mut() {
-            Ok(Minisketch { inner, bits, implementation, capacity })
+            Ok(Minisketch {
+                inner,
+                bits,
+                implementation,
+                capacity,
+            })
         } else {
             Err(())
         }
@@ -184,7 +189,9 @@ impl Minisketch {
     }
 
     /// Returns implementation version number.
-    pub fn implementation(&self) -> u32 { unsafe { ffi::minisketch_implementation(self.inner) } }
+    pub fn implementation(&self) -> u32 {
+        unsafe { ffi::minisketch_implementation(self.inner) }
+    }
 
     /// Returns the size in bytes for serializing a given sketch.
     pub fn serialized_size(&self) -> usize {
@@ -238,7 +245,9 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn set_seed(&mut self, seed: u64) { unsafe { ffi::minisketch_set_seed(self.inner, seed) } }
+    pub fn set_seed(&mut self, seed: u64) {
+        unsafe { ffi::minisketch_set_seed(self.inner, seed) }
+    }
 
     /// Merge the elements of another sketch into this sketch.
     ///
@@ -366,7 +375,9 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn deserialize(&mut self, buf: &[u8]) { unsafe { ffi::minisketch_deserialize(self.inner, buf.as_ptr()) } }
+    pub fn deserialize(&mut self, buf: &[u8]) {
+        unsafe { ffi::minisketch_deserialize(self.inner, buf.as_ptr()) }
+    }
 
     /// Serialize a sketch to bytes.
     ///
@@ -404,7 +415,9 @@ impl Minisketch {
 /// Custom `Debug` implementation that shows basic information about opaque `minisketch`.
 impl Debug for Minisketch {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(f, "Minisketch {{ bits = {}, implementation = {}, capacity = {} }}",
+        write!(
+            f,
+            "Minisketch {{ bits = {}, implementation = {}, capacity = {} }}",
             self.bits(),
             self.implementation(),
             self.capacity(),
@@ -432,7 +445,7 @@ impl Clone for Minisketch {
             inner,
             bits: self.bits,
             implementation: self.implementation,
-            capacity: self.capacity
+            capacity: self.capacity,
         }
     }
 }
