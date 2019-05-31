@@ -18,4 +18,5 @@ branches:
 addons:
   apt:
     packages:
-      - g++-multilib
+      - g++
+      - gcc
