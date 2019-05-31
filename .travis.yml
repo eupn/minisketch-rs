@@ -18,7 +18,7 @@ branches:
 addons:
   apt:
     packages:
-      - g++
-      - gcc
+      - c++
+      - clang-3.8
       - libc++-dev
       - libc++abi-dev
