@@ -1,0 +1,21 @@
+language: rust
+rust:
+  - stable
+  - beta
+  - nightly
+
+script:
+  - cargo build --release
+  - cargo test --release
+
+cache: cargo
+before_cache:
+  - chmod -R a+r $HOME/.cargo
+
+branches:
+  only:
+    - master
+addons:
+  apt:
+    packages:
+      - g++-multilib
