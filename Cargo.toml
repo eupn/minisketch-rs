@@ -5,6 +5,8 @@ authors = ["Evgenii P. <eupn@protonmail.com>"]
 edition = "2018"
 links = "minisketch"
 build = "build.rs"
+keywords = ["minisketch", "set", "reconciliation"]
+categories = ["ffi", "math"]
 
 [dependencies]
 libc = "0.2.51"
