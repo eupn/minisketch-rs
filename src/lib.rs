@@ -8,7 +8,7 @@
 //! # minisketch-rs
 //!
 //! `minisketch-rs` is a wrapper around [minisketch],
-//! a C library by [Pieter Wuille] for efficient set reconciliation.
+//! a C++ library by [Pieter Wuille] for efficient set reconciliation.
 //!
 //! Minisketch is proposed as part of an [Erlay] technique for bandwidth-efficient TX propagation in Bitcoin.
 //!
