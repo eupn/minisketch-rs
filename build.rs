@@ -1,9 +1,9 @@
 use bindgen;
+use cc;
 use std::env;
 use std::fs;
-use std::path::PathBuf;
-use cc;
 use std::fs::read_dir;
+use std::path::PathBuf;
 
 fn fail_on_empty_directory(name: &str) {
     if fs::read_dir(name).unwrap().count() == 0 {
