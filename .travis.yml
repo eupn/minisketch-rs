@@ -16,7 +16,7 @@ branches:
   only:
     - master
 
-atrix:
+matrix:
   include:
     # works on Trusty
     - os: linux
