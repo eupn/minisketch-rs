@@ -3,6 +3,7 @@
 [![Crates.io](https://img.shields.io/crates/v/minisketch-rs.svg)](https://crates.io/crates/minisketch-rs)
 [![Crates.io](https://img.shields.io/crates/d/minisketch-rs.svg)](https://crates.io/crates/minisketch-rs)
 [![Docs.rs](https://docs.rs/minisketch-rs/badge.svg)](https://docs.rs/minisketch-rs/0.1.0/minisketch_rs/)
+[![Build Status](https://travis-ci.com/eupn/minisketch-rs.svg?branch=master)](https://travis-ci.com/eupn/minisketch-rs)
 
 `minisketch-rs` is a wrapper around [minisketch](https://github.com/sipa/minisketch),
 a C library by [Pieter Wuille](https://github.com/sipa) for efficient set reconciliation.
