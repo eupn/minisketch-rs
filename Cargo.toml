@@ -10,6 +10,7 @@ keywords = ["minisketch", "set", "reconciliation"]
 categories = ["ffi", "math"]
 readme = "README.md"
 repository = "https://github.com/eupn/minisketch-rs"
+license = "Apache-2.0"
 
 [dependencies]
 libc = "0.2.51"
