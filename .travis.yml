@@ -1,8 +1,6 @@
 language: rust
 rust:
   - stable
-  - beta
-  - nightly
 
 script:
   - cargo build --release
@@ -16,18 +14,15 @@ branches:
   only:
     - master
 
-matrix:
-  include:
-    # works on Trusty
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-5.0
-          packages:
-            - clang-5.0
-      env:
-        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-6.0
+    packages:
+      - clang-6.0
+      - libc++-dev
+      - libc++abi-dev
 
 before_install:
-  - eval "${MATRIX_EVAL}"
+  - eval "CC=clang-5.0 && CXX=clang++-5.0"
