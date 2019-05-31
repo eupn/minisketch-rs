@@ -22,6 +22,9 @@ mod ffi {
 /// Describes decoded sketches and holding underlying opaque type inside.
 pub struct Minisketch {
     inner: *mut ffi::minisketch,
+    bits: u32,
+    implementation: u32,
+    capacity: usize,
 }
 
 impl Minisketch {
@@ -45,15 +48,10 @@ impl Minisketch {
         let inner = unsafe { ffi::minisketch_create(bits, implementation, capacity) };
 
         if inner != std::ptr::null_mut() {
-            Ok(Minisketch { inner })
+            Ok(Minisketch { inner, bits, implementation, capacity })
         } else {
             Err(())
         }
-    }
-
-    #[doc(hidden)]
-    fn new_from_opaque(inner: *mut ffi::minisketch) -> Self {
-        Minisketch { inner }
     }
 
     /// Returns element size in a sketch in bits.
@@ -310,7 +308,13 @@ impl Drop for Minisketch {
 impl Clone for Minisketch {
     fn clone(&self) -> Self {
         let inner = unsafe { ffi::minisketch_clone(self.inner) };
-        Self::new_from_opaque(inner)
+
+        Minisketch {
+            inner,
+            bits: self.bits,
+            implementation: self.implementation,
+            capacity: self.capacity
+        }
     }
 }
 
