@@ -1,6 +1,6 @@
-use minisketch_rs::Minisketch;
+use minisketch_rs::{Minisketch, MinisketchError};
 
-pub fn main() -> Result<(), ()> {
+pub fn main() -> Result<(), MinisketchError> {
     // Alice's side
     let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
 

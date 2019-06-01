@@ -3,7 +3,7 @@
 #![deny(missing_docs)]
 #![deny(unused_results)]
 #![deny(dead_code)]
-#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.2")]
 
 //! # minisketch-rs
 //!
@@ -126,8 +126,27 @@
 //! [Pieter Wuille]: https://github.com/sipa
 //! [Erlay]: https://arxiv.org/abs/1905.10518
 
-use std::fmt::{Debug, Error, Formatter};
+use std::fmt::{Debug, Formatter, Display};
 use std::ops::BitXorAssign;
+use std::error::Error;
+
+/// Error that originates from `libminisketch`, with a message.
+#[derive(Debug)]
+pub struct MinisketchError(String);
+
+impl MinisketchError {
+    /// Creates an error with a message.
+    pub fn new(msg: &str) -> Self {
+        MinisketchError(msg.to_owned())
+    }
+}
+
+impl Error for MinisketchError {}
+impl Display for MinisketchError {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
+        write!(f, "MinisketchError({})", self.0)
+    }
+}
 
 #[doc(hidden)]
 mod ffi {
@@ -152,18 +171,19 @@ impl Minisketch {
     /// # Errors
     ///
     /// If the combination of `bits` and `implementation` is unavailable, or if
-    /// `capacity` is 0, an `Err(())` is returned.
+    /// `capacity` is 0, an `Err(MinisketchError)` is returned.
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let sketch = Minisketch::try_new(12, 0, 4)?;
     /// # Ok(())
     /// # }
     /// ```
-    pub fn try_new(bits: u32, implementation: u32, capacity: usize) -> Result<Self, ()> {
+    pub fn try_new(bits: u32, implementation: u32, capacity: usize) -> Result<Self, MinisketchError> {
         let inner = unsafe { ffi::minisketch_create(bits, implementation, capacity) };
 
         if inner != std::ptr::null_mut() {
@@ -174,7 +194,7 @@ impl Minisketch {
                 capacity,
             })
         } else {
-            Err(())
+            Err(MinisketchError::new("Unsupported minisketch parameters"))
         }
     }
 
@@ -233,8 +253,9 @@ impl Minisketch {
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 4)?;
     /// sketch.add(42);
@@ -259,8 +280,9 @@ impl Minisketch {
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 4)?;
     /// sketch.set_seed(42);
@@ -289,14 +311,15 @@ impl Minisketch {
     ///
     /// # Errors
     ///
-    /// Returns `Err(())` to indicate that merging has failed
+    /// Returns `Err(MinisketchError)` to indicate that merging has failed
     /// because the two input sketches differ in their element size or implementation. If `Err` is
     /// returned, `sketch` (and its capacity) have not been modified.
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
     /// sketch_a.add(10);
@@ -318,11 +341,11 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn merge(&mut self, other: &Self) -> Result<usize, ()> {
+    pub fn merge(&mut self, other: &Self) -> Result<usize, MinisketchError> {
         let capacity = unsafe { ffi::minisketch_merge(self.inner, other.inner) };
 
         if capacity == 0 {
-            Err(())
+            Err(MinisketchError::new("Merge is failed"))
         } else {
             Ok(capacity)
         }
@@ -337,12 +360,13 @@ impl Minisketch {
     ///
     /// # Errors
     ///
-    /// Returns `Err(())` if decoding failed for any reason.
+    /// Returns `Err(MinisketchError)` if decoding failed for any reason.
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 2)?;
     /// sketch.add(42);
@@ -355,12 +379,12 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn decode(&self, elements: &mut [u64]) -> Result<usize, ()> {
+    pub fn decode(&self, elements: &mut [u64]) -> Result<usize, MinisketchError> {
         let result =
             unsafe { ffi::minisketch_decode(self.inner, elements.len(), elements.as_mut_ptr()) };
 
         if result == -1 {
-            Err(())
+            Err(MinisketchError::new("Sketch decoding failed"))
         } else {
             Ok(result as usize)
         }
@@ -370,8 +394,9 @@ impl Minisketch {
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     ///
     /// // Create Alice's sketch
@@ -405,13 +430,14 @@ impl Minisketch {
     ///
     /// # Errors
     ///
-    /// Returns `Err(())` if `.len()` of the provided buffer `buf` is less than a size in bytes of
+    /// Returns `Err(MinisketchError)` if `.len()` of the provided buffer `buf` is less than a size in bytes of
     /// the serialized representation of the sketch.
     ///
     /// # Examples
     ///
-    /// ```edition2018
-    /// # pub fn main() -> Result<(), ()> {
+    /// ```rust
+    /// # use minisketch_rs::MinisketchError;
+    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 2)?;
     /// sketch.add(42);
@@ -422,11 +448,11 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn serialize(&self, buf: &mut [u8]) -> Result<(), ()> {
+    pub fn serialize(&self, buf: &mut [u8]) -> Result<(), MinisketchError> {
         let size = self.serialized_size();
 
         if size < buf.len() {
-            return Err(());
+            return Err(MinisketchError::new("Invalid size of the output buffer"));
         }
 
         unsafe { ffi::minisketch_serialize(self.inner, buf.as_mut_ptr()) }
@@ -436,7 +462,7 @@ impl Minisketch {
 
 /// Custom `Debug` implementation that shows basic information about opaque `minisketch`.
 impl Debug for Minisketch {
-    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
         write!(
             f,
             "Minisketch {{ bits = {}, implementation = {}, capacity = {} }}",
@@ -476,8 +502,9 @@ impl Clone for Minisketch {
 ///
 /// # Example
 ///
-/// ```edition2018
-/// # pub fn main() -> Result<(), ()> {
+/// ```rust
+/// # use minisketch_rs::MinisketchError;
+/// # pub fn main() -> Result<(), MinisketchError> {
 /// use minisketch_rs::Minisketch;
 /// let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
 /// sketch_a.add(10);

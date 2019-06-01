@@ -1,6 +1,6 @@
 [package]
 name = "minisketch-rs"
-version = "0.1.1"
+version = "0.1.2" # remember to update html_root_url
 authors = ["Evgenii P. <eupn@protonmail.com>"]
 description = "Rust interface to Pieter Wuille's minisketch library for efficient set reconciliation"
 edition = "2018"
