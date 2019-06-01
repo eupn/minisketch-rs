@@ -44,7 +44,6 @@ fn build_lib() {
     // Build minisketch library
     cc::Build::new()
         .files(src_files)
-        //.include("minisketch/src")
         .cpp(true)
         .opt_level(2)
         .debug(false)
@@ -60,31 +59,13 @@ fn build_lib() {
 fn generate_bindings() {
     let bindings = bindgen::Builder::default()
         .generate_comments(false)
-        // The input header we would like to generate
-        // bindings for.
         .header("minisketch/include/minisketch.h")
-        // Whitelist minisketch type
         .whitelist_type("minisketch")
         .opaque_type("minisketch")
-        // We'll redefine Copy and Clone by utilizing minisketch's minisketch_clone() and minisketch_destroy()
+        // We'll redefine Clone, Copy and Drop by utilizing minisketch_clone() and minisketch_destroy()
         .no_copy("minisketch")
-        // Whitelist minisketch library functions
-        .whitelist_function("minisketch_create")
-        .whitelist_function("minisketch_bits")
-        .whitelist_function("minisketch_capacity")
-        .whitelist_function("minisketch_implementation")
-        .whitelist_function("minisketch_set_seed")
-        .whitelist_function("minisketch_clone")
-        .whitelist_function("minisketch_destroy")
-        .whitelist_function("minisketch_serialized_size")
-        .whitelist_function("minisketch_serialize")
-        .whitelist_function("minisketch_deserialize")
-        .whitelist_function("minisketch_add_uint64")
-        .whitelist_function("minisketch_merge")
-        .whitelist_function("minisketch_decode")
-        // Finish the builder and generate the bindings.
+        .whitelist_function("minisketch_.+") // Bind to all minisketch_...() functions
         .generate()
-        // Unwrap the Result and panic on failure.
         .expect("Unable to generate bindings");
 
     // Write the bindings to the $OUT_DIR/bindings.rs file.

@@ -178,6 +178,25 @@ impl Minisketch {
         }
     }
 
+    /// Determine whether support for elements of size of `bits` bits was compiled in.
+    pub fn bits_supported(bits: u32) -> bool {
+        let res = unsafe { ffi::minisketch_bits_supported(bits) };
+        res != 0
+    }
+
+    /// Determine the maximum number of implementations available.
+    ///
+    /// Multiple implementations may be available for a given element size, with
+    /// different performance characteristics on different hardware.
+    ///
+    /// Each implementation is identified by a number from 0 to the output of this
+    /// function call, inclusive. Note that not every combination of implementation
+    /// and element size may exist.
+    pub fn implementation_max() -> u32 {
+        let res = unsafe { ffi::minisketch_implementation_max() };
+        res
+    }
+
     /// Returns element size in a sketch in bits.
     pub fn bits(&self) -> u32 {
         unsafe { ffi::minisketch_bits(self.inner) }
