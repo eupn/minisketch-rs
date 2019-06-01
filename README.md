@@ -1,4 +1,4 @@
-### minisketch-rs
+# minisketch-rs
 
 [![Crates.io](https://img.shields.io/crates/v/minisketch-rs.svg)](https://crates.io/crates/minisketch-rs)
 [![Crates.io](https://img.shields.io/crates/d/minisketch-rs.svg)](https://crates.io/crates/minisketch-rs)
@@ -12,7 +12,7 @@ a C library by [Pieter Wuille](https://github.com/sipa) for efficient set reconc
 
 This library exposes type-safe Rust bindings for all `minisketch` functions by providing `Minisketch` structure.
 
-#### Example
+## Example
 
 Cargo.toml:
 ```toml
