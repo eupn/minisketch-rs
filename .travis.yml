@@ -10,7 +10,6 @@ addons:
     packages:
       - gcc-6
       - g++-6
-      - cmake
       - libc++-dev
       - libc++abi-dev
 script:
@@ -20,8 +19,8 @@ script:
   # Export CC and CXX to tell cmake which compiler to use
   - export CC=/usr/bin/gcc-6
   - export CXX=/usr/bin/g++-6
-  # Check versions of gcc, g++ and cmake
-  - gcc -v && g++ -v && cmake --version
+  # Check versions of gcc, g++
+  - gcc -v && g++ -v
   - cargo build --release
   - cargo test --release
 
