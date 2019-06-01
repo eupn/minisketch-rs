@@ -23,10 +23,10 @@
 //! ```
 //!
 //! Example of simple set reconciliation between Alice and Bob:
-//! ```edition2018
-//! # pub fn main() -> Result<(), ()> {
+//! ```rust
+//! # use minisketch_rs::MinisketchError;
+//! # pub fn main() -> Result<(), MinisketchError> {
 //! use minisketch_rs::Minisketch;
-//!
 //! // Alice's side
 //! let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
 //!
