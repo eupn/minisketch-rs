@@ -209,6 +209,9 @@ impl Minisketch {
     /// bits), then this function is a no-op. Sketches cannot contain an element with
     /// the value 0.
     ///
+    /// Note that adding the same element a second time removes it again, as sketches have
+    /// set semantics, not multiset semantics.
+    ///
     /// # Examples
     ///
     /// ```edition2018
