@@ -2,7 +2,7 @@
 #![deny(missing_docs)]
 #![deny(unused_results)]
 #![deny(dead_code)]
-#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.3")]
+#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.4")]
 
 //! # minisketch-rs
 //!
