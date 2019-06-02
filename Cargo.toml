@@ -1,6 +1,6 @@
 [package]
 name = "minisketch-rs"
-version = "0.1.2" # remember to update html_root_url
+version = "0.1.3" # remember to update html_root_url
 authors = ["Evgenii P. <eupn@protonmail.com>"]
 description = "Rust interface to Pieter Wuille's minisketch library for efficient set reconciliation"
 edition = "2018"
@@ -11,10 +11,14 @@ categories = ["api-bindings"]
 readme = "README.md"
 repository = "https://github.com/eupn/minisketch-rs"
 license = "Apache-2.0"
+documentation = "https://docs.rs/minisketch_rs"
 
 [dependencies]
-libc = "0.2.51"
+libc = "0.2"
 
 [build-dependencies]
-bindgen = "0.49.0"
+bindgen = "0.49"
 cc = "1.0"
+
+[[example]]
+name = "simple"
