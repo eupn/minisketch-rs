@@ -1,4 +1,3 @@
-#![deny(warnings)]
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
 #![deny(unused_results)]
