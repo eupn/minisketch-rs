@@ -42,10 +42,9 @@ pub fn main() -> Result<(), MinisketchError> {
         let num_differences = sketch_b.decode(&mut differences[..])?;
 
         println!("Differences between Alice and Bob: {}", num_differences);
-
         assert!(num_differences > 0);
 
-        // Sort differences since they may come in arbitrary order from minisketch_decode()
+        // Sort differences since they may come in arbitrary order from Minisketch::decode()
         let mut differences = Vec::from(&differences[..]);
         differences.sort();
 
