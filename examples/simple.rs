@@ -29,10 +29,10 @@
 //!     |                                   |                  |                         
 //!     |                                   |<------------------                         
 //!     |                                   |                                            
-//!     |                                   | Extract differences from the merged sketch 
-//!     |                                   |------------------------------------------- 
-//!     |                                   |                                          | 
-//!     |                                   |<------------------------------------------ 
+//!     |                                   | Extract differences from the merged sketch
+//!     |                                   |-------------------------------------------
+//!     |                                   |                                          |
+//!     |                                   |<------------------------------------------
 //!     |                                   |                                            
 //!     |       (Optional) Send differences |                                            
 //!     |<----------------------------------|                                            
@@ -51,14 +51,20 @@ fn create_sketch(elements: impl IntoIterator<Item = u64>) -> Result<Minisketch, 
 
 fn create_sketch_alice() -> Result<Minisketch, MinisketchError> {
     let set = 3_000..3_010;
-    println!("Alice's set: {:?}", set.clone().into_iter().collect::<Vec<_>>());
+    println!(
+        "Alice's set: {:?}",
+        set.clone().into_iter().collect::<Vec<_>>()
+    );
 
     Ok(create_sketch(set)?)
 }
 
 fn create_sketch_bob() -> Result<Minisketch, MinisketchError> {
     let set = 3_002..3_012;
-    println!("Bob's set: {:?}", set.clone().into_iter().collect::<Vec<_>>());
+    println!(
+        "Bob's set: {:?}",
+        set.clone().into_iter().collect::<Vec<_>>()
+    );
 
     Ok(create_sketch(set)?)
 }

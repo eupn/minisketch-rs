@@ -22,3 +22,6 @@ cc = "1.0"
 
 [[example]]
 name = "simple"
+
+[[example]]
+name = "bisect"

@@ -25,9 +25,9 @@
 
 pub mod examples;
 
-use std::fmt::{Debug, Formatter, Display};
-use std::ops::BitXorAssign;
 use std::error::Error;
+use std::fmt::{Debug, Display, Formatter};
+use std::ops::BitXorAssign;
 
 /// Error that originates from `libminisketch`, with a message.
 #[derive(Debug)]
@@ -82,7 +82,11 @@ impl Minisketch {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn try_new(bits: u32, implementation: u32, capacity: usize) -> Result<Self, MinisketchError> {
+    pub fn try_new(
+        bits: u32,
+        implementation: u32,
+        capacity: usize,
+    ) -> Result<Self, MinisketchError> {
         let inner = unsafe { ffi::minisketch_create(bits, implementation, capacity) };
 
         if inner != std::ptr::null_mut() {

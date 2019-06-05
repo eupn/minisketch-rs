@@ -6,6 +6,7 @@ set -euxo pipefail
 main() {
     local examples=(
         simple
+        bisect
     )
 
     rm -rf src/examples
