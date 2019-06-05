@@ -53,7 +53,7 @@
 //!     |                                   | Perform bisection:
 //!     |                                   | diff1 = reconcile(A/2, B/2)
 //!     |                                   | diff2 = reconcile(A - A/2, B - B/2)
-//!     |                                   | bob_missing = diff1 U diff2
+//!     |                                   | bob_missing = diff1 ∪ diff2
 //!     |                                   |-------------------------------------
 //!     |                                   |                                    |
 //!     |                                   |<------------------------------------
