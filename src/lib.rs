@@ -2,7 +2,7 @@
 #![deny(missing_docs)]
 #![deny(unused_results)]
 #![deny(dead_code)]
-#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.6")]
+#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.7")]
 
 //! # minisketch-rs
 //!
@@ -54,6 +54,8 @@ mod ffi {
     #![allow(non_snake_case)]
 
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+    unsafe impl Send for minisketch {}
 }
 
 /// Describes decoded sketches and holding underlying opaque type inside.
