@@ -77,12 +77,9 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let sketch = Minisketch::try_new(12, 0, 4)?;
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn try_new(
         bits: u32,
@@ -159,14 +156,10 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 4)?;
     /// sketch.add(42);
-    ///
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn add(&mut self, element: u64) {
         unsafe { ffi::minisketch_add_uint64(self.inner, element) }
@@ -186,13 +179,10 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 4)?;
     /// sketch.set_seed(42);
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn set_seed(&mut self, seed: u64) {
         unsafe { ffi::minisketch_set_seed(self.inner, seed) }
@@ -223,8 +213,6 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
     /// sketch_a.add(10);
@@ -243,8 +231,7 @@ impl Minisketch {
     ///
     /// assert!((differences[0] == 42 || differences[0] == 10) && (differences[1] == 10 || differences[1] == 42));
     ///
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn merge(&mut self, other: &Self) -> Result<usize, MinisketchError> {
         let capacity = unsafe { ffi::minisketch_merge(self.inner, other.inner) };
@@ -270,8 +257,6 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 2)?;
     /// sketch.add(42);
@@ -281,8 +266,7 @@ impl Minisketch {
     ///
     /// // Elements may come in arbitrary order, so check all possible variants
     /// assert!((elements[0] == 42 || elements[0] == 10) && (elements[1] == 10 || elements[1] == 42));
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn decode(&self, elements: &mut [u64]) -> Result<usize, MinisketchError> {
         let result =
@@ -300,8 +284,6 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     ///
     /// // Create Alice's sketch
@@ -324,8 +306,7 @@ impl Minisketch {
     /// sketch_bob.decode(&mut elements)?;
     /// // Elements may come in arbitrary order, so check all possible variants
     /// assert!((elements[0] == 42 || elements[0] == 10) && (elements[1] == 10 || elements[1] == 42));
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn deserialize(&mut self, buf: &[u8]) {
         unsafe { ffi::minisketch_deserialize(self.inner, buf.as_ptr()) }
@@ -341,8 +322,6 @@ impl Minisketch {
     /// # Examples
     ///
     /// ```rust
-    /// # use minisketch_rs::MinisketchError;
-    /// # pub fn main() -> Result<(), MinisketchError> {
     /// use minisketch_rs::Minisketch;
     /// let mut sketch = Minisketch::try_new(12, 0, 2)?;
     /// sketch.add(42);
@@ -350,8 +329,7 @@ impl Minisketch {
     ///
     /// let mut buf = vec![0u8; sketch.serialized_size()];
     /// sketch.serialize(&mut buf);
-    /// # Ok(())
-    /// # }
+    /// # Ok::<(), minisketch_rs::MinisketchError>(())
     /// ```
     pub fn serialize(&self, buf: &mut [u8]) -> Result<(), MinisketchError> {
         let size = self.serialized_size();
@@ -408,8 +386,6 @@ impl Clone for Minisketch {
 /// # Example
 ///
 /// ```rust
-/// # use minisketch_rs::MinisketchError;
-/// # pub fn main() -> Result<(), MinisketchError> {
 /// use minisketch_rs::Minisketch;
 /// let mut sketch_a = Minisketch::try_new(12, 0, 4)?;
 /// sketch_a.add(10);
@@ -428,8 +404,7 @@ impl Clone for Minisketch {
 ///
 /// assert!((differences[0] == 42 || differences[0] == 10) && (differences[1] == 10 || differences[1] == 42));
 ///
-/// # Ok(())
-/// # }
+/// # Ok::<(), minisketch_rs::MinisketchError>(())
 /// ```
 impl BitXorAssign for Minisketch {
     fn bitxor_assign(&mut self, rhs: Minisketch) {
