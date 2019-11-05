@@ -17,7 +17,7 @@ documentation = "https://docs.rs/minisketch_rs"
 libc = "0.2"
 
 [build-dependencies]
-bindgen = "0.49"
+bindgen = "0.51"
 cc = "1.0"
 
 [[example]]
