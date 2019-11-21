@@ -3,20 +3,6 @@ os: osx
 rust:
   - stable
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-6.0
-    packages:
-      - gcc-6
-      - g++-6
-      - libc++-dev
-      - libc++abi-dev
-script: 
-  - cargo build --release
-  - cargo test --release
-
 cache: cargo
 before_cache:
   - chmod -R a+r $HOME/.cargo
