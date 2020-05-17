@@ -1,4 +1,4 @@
-//! Example of simple set reconciliaton between Alice and Bob. Bob is the one who wants to reconcile
+//! Example of simple set reconciliation between Alice and Bob. Bob is the one who wants to reconcile
 //! his set of data with Alice.
 //!
 //! ```notrust
