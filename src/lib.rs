@@ -2,7 +2,7 @@
 #![deny(missing_docs)]
 #![deny(unused_results)]
 #![deny(dead_code)]
-#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.8")]
+#![doc(html_root_url = "https://docs.rs/minisketch_rs/0.1.9")]
 
 //! # minisketch-rs
 //!
@@ -88,7 +88,7 @@ impl Minisketch {
     ) -> Result<Self, MinisketchError> {
         let inner = unsafe { ffi::minisketch_create(bits, implementation, capacity) };
 
-        if inner != std::ptr::null_mut() {
+        if !inner.is_null() {
             Ok(Minisketch {
                 inner,
                 bits,
@@ -115,8 +115,7 @@ impl Minisketch {
     /// function call, inclusive. Note that not every combination of implementation
     /// and element size may exist.
     pub fn implementation_max() -> u32 {
-        let res = unsafe { ffi::minisketch_implementation_max() };
-        res
+        unsafe { ffi::minisketch_implementation_max() }
     }
 
     /// Returns element size in a sketch in bits.
